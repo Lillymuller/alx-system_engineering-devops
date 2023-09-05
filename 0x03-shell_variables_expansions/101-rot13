@@ -1,2 +1,2 @@
 #!/bin/bash
-echo |tr "*wc " |rot13
+echo rot.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
