@@ -1,3 +1,2 @@
 #!/bin/bash
-	
-/bin/sed y/abcdefghijklmnopqrstuvwxy  zABCDEFGHIJKLMNOPQRSTUVWXYZ/nopqr  stuvwxyzabcdefghijklmNOPQRSTUVWXY ZABCDEFGHIJKLM/ 
+echo |tr "*wc " |rot13
