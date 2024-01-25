@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Displays "Best School" 10 times using a while loop.
+
+rep=0
+
+while [ $rep -lt 10 ]
+do
+  echo "Best School"
+  (( rep++ ))
+done
