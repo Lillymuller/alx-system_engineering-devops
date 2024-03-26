@@ -4,29 +4,26 @@
 #+    Returns a page containing "Hello World" when queried
 #++    at the root with a curl GET request.
 
-echo -e "Updating and installing Nginx.\n"
-sudo apt-get update -y -qq && \
-	 sudo apt-get install nginx -y
+# Update package lists
+sudo apt update
 
-echo -e "\nSetting up some minor stuff.\n"
+# Install Nginx
+sudo apt install nginx -y
 
-# starting nginx service
-sudo service nginx start
+# Create a new default file for the web server
+sudo touch /var/www/html/index.html
 
-# allowing nginx on firewall
-sudo ufw allow 'Nginx HTTP'
+# Add content to the index.html file
+echo "Hello World!" | sudo tee /var/www/html/index.html
 
-# Give the user ownership to website files for easy editing
-sudo chown -R "$USER":"$USER" /var/www/html
-sudo chmod -R 755 /var/www
+# Adjust firewall rules to allow traffic on port 80 (assuming UFW firewall)
+sudo ufw allow 80
 
-# Backup default index
-cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
-
-# Creating new index
-echo -e "Hello World!" | dd status=none of=/var/www/html/index.nginx-debian.html
-
-# Restarting nginx
+# Restart Nginx (avoiding systemctl)
 sudo service nginx restart
 
-echo -e "\nCompleted. ✅\n"
+# Verify Nginx is running
+sudo service nginx status
+
+# Show IP address (optional)
+# hostname -I | awk '{print $1}'
