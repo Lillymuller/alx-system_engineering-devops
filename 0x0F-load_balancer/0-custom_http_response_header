@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#The name of the custom HTTP header must be X-Served-By
+#The value of the custom HTTP header must be the hostname of the server Nginx is running on
+#Configure Nginx so that its HTTP response contains a custom header (on web-01 and web-02)
+#configure web-02 to be identical to web-01
+server_config="
+server {
+  # Listen on port 80 (standard web traffic) for all addresses (IPv4 and IPv6)
+  listen 80 default_server;
+  listen [::]:80 default_server;
+
+  # Set the root directory for website content
+  root /var/www/html;
+
+  # Define the default file to serve for requests (index.html, etc.)
+  index index.html index.htm index.nginx-debian.html;
+
+  # Match any hostname (useful during initial setup)
+  server_name _;
+
+  # Add a custom header named "X-Served-By" with the server's hostname
+  add_header X-Served-By \$hostname;
+
+  # Define a location block to handle requests:
+  location / {
+    # Try to serve the requested resource or redirect to a 404 page if not found
+    try_files \$uri \$uri/ =404;
+  }
+
+  # (Optional) Redirect requests for "redirect_me" to YouTube permanently
+  if (\$request_filename ~ redirect_me) {
+    rewrite ^ https://youtube.com permanent;
+  }
+
+  # Set the custom 404 page for requests that don't match anything
+  error_page 404 /404.html;
+
+  # Make the 404 page accessible internally (prevents redirection loops)
+  location = /404.html {
+    internal;
+  }
+}
+"
