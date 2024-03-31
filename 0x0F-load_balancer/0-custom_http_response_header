@@ -9,11 +9,11 @@ sudo apt-get -y install nginx
 
 sudo mkdir -p /var/www/html
 touch /var/www/html/index.html
-touch /var/www/html/404.html
 echo 'Hello World!' > /var/www/html/index.html
+touch /var/www/html/404.html
 echo "Ceci n'est pas une page" > /var/www/html/404.html
-
-printf "server {
+server_config=\
+"server {
     listen 80 default_server;
     listen [::]:80 default_server;
     add_header X-Served-By $HOSTNAME;
