@@ -10,41 +10,23 @@ sudo mkdir -p /var/www/html /var/www/error
 sudo chmod -R 755 /var/www
 echo 'Hello World!' > /var/www/html/index.html
 echo "Ceci n'est pas une page" > /var/www/html/404.html
-server_config="
-server {
-  # Listen on port 80 (standard web traffic) for all addresses (IPv4 and IPv6)
-  listen 80 default_server;
-  listen [::]:80 default_server;
+server_config=\
+	printf %s "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    add_header X-Served-By $HOSTNAME;
+    root   /var/www/html;
+    index  index.html index.htm;
 
-  # Set the root directory for website content
-  root /var/www/html;
+    location /redirect_me {
+        return 301 http://cuberule.com/;
+    }
 
-  # Define the default file to serve for requests (index.html, etc.)
-  index index.html index.htm index.nginx-debian.html;
+    error_page 404 /404.html;
+    location /404 {
+      root /var/www/html;
+      internal;
+    }
+}" > /etc/nginx/sites-available/default
 
-  # Match any hostname (useful during initial setup)
-  server_name _;
-
-  # Add a custom header named "X-Served-By" with the server's hostname
-  add_header X-Served-By \$hostname;
-
-  # Define a location block to handle requests:
-  location / {
-    # Try to serve the requested resource or redirect to a 404 page if not found
-    try_files \$uri \$uri/ =404;
-  }
-
-  # (Optional) Redirect requests for "redirect_me" to YouTube permanently
-  if (\$request_filename ~ redirect_me) {
-    rewrite ^ https://youtube.com permanent;
-  }
-
-  # Set the custom 404 page for requests that don't match anything
-  error_page 404 /404.html;
-
-  # Make the 404 page accessible internally (prevents redirection loops)
-  location = /404.html {
-    internal;
-  }
-}
-"
+service nginx restart
