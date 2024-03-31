@@ -5,10 +5,31 @@
 #the server Nginx is running on
 #Define a class for Nginx configuration
 
-exec { 'command':
-  command  => 'apt-get -y update;
-  apt-get -y install nginx;
-  sudo sed -i "/listen 80 default_server;/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-available/default;
-  service nginx restart',
-  provider => shell,
+class nginx_custom_header {
+
+  # Retrieve the server's hostname using Facter
+  $server_hostname = Facter['fqdn']
+
+  # Include the standard Nginx module
+  include nginx
+
+  # Configure the default server block
+  nginx::resource { 'server':
+    name   => 'default',
+    ensure => present,
+    listen => ['80 default_server'],
+    
+    location => {
+      '/' => {
+        # ... other configuration options (if needed)
+        add_header => { 'X-Served-By' => $server_hostname },
+      },
+    },
+  }
+
+  # Ensure the Nginx service is restarted after configuration changes
+  nginx::service {
+    ensure => running,
+    enable => true,
+  }
 }
