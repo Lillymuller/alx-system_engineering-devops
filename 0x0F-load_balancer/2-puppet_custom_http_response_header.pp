@@ -5,31 +5,21 @@
 #the server Nginx is running on
 #Define a class for Nginx configuration
 
-class nginx_custom_header {
+exec { 'configure_nginx':
+  # Update package lists and install Nginx
+  command => 'apt-get update && apt-get install -y nginx',
+  # Explain the purpose of this command
+  # (consider splitting these into separate exec resources for clarity)
+  # Adds the custom header to the default server block using sed
+  command => '/bin/bash -c "apt-get update && apt-get install -y nginx;
+              sudo sed -i \"/listen 80 default_server;/a add_header X-Served-By $HOSTNAME;\" /etc/nginx/sites-available/default"',
+  # Use provider => shell to execute the command as a shell script
+  provider => shell,
+}
 
-  # Retrieve the server's hostname using Facter
-  $server_hostname = Facter['fqdn']
-
-  # Include the standard Nginx module
-  include nginx
-
-  # Configure the default server block
-  nginx::resource { 'server':
-    name   => 'default',
-    ensure => present,
-    listen => ['80 default_server'],
-    
-    location => {
-      '/' => {
-        # ... other configuration options (if needed)
-        add_header => { 'X-Served-By' => $server_hostname },
-      },
-    },
-  }
-
-  # Ensure the Nginx service is restarted after configuration changes
-  nginx::service {
-    ensure => running,
-    enable => true,
-  }
+# Restart Nginx service after configuration changes
+exec { 'restart_nginx':
+  command => 'service nginx restart',
+  # Explain the purpose of restarting Nginx
+  provider => shell,
 }
