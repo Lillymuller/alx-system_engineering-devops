@@ -13,9 +13,18 @@ class nginx_header {
   # Include the standard Nginx module
   include nginx
 
-  # Define a resource to add the custom header
-  nginx::header { 'X-Served-By':
-    value => $server_hostname,
+  # Configure the default server block
+  nginx::resource { 'server':
+    name   => 'default',
+    ensure => present,
+    listen => ['80 default_server'],
+
+    location => {
+      '/' => {
+        # ... other configuration options (if needed)
+        add_header => { 'X-Served-By' => $server_hostname },
+      },
+    },
   }
 
   # Ensure the Nginx service is restarted after configuration changes
