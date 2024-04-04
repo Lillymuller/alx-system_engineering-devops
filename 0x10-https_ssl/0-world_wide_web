@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 #Configure your domain so that subdomain www points to your load-balancer IP (lb-01)
-#Add the subdomain www to your domain, point it to your lb-01 IP
-#Add the subdomain lb-01 to your domain, point it to your lb-01 IP
-#Add the subdomain web-01 to your domain, point it to your web-01 IP
-#Add the subdomain web-02 to your domain, point it to your web-02 IP
-#output: The subdomain [SUB_DOMAIN] is a [RECORD_TYPE] record and points to [DESTINATION]
 
 print_rec ()
 {
