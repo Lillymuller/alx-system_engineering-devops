@@ -1,5 +1,5 @@
 
-bal
+global
         log /dev/log    local0
         log /dev/log    local1 notice
         chroot /var/lib/haproxy
@@ -52,7 +52,7 @@ frontend www-http
         default_backend www-backend
 
 frontend www-https
-        bind *:443 ssl crt /etc/haproxy/certs/www.melissax.online.pem
+        bind *:443 ssl crt /etc/haproxy/certs/www.lillymullerx.online.pem
         reqadd X-Forwarded-Proto:\ https
         acl letsencrypt-acl path_beg /.well-known/acme-challenge/
         use_backend letsencrypt-backend if letsencrypt-acl
