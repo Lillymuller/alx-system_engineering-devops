@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-age: ./1-world_wide_web <domain> <subdomain>
+# Usage: ./1-world_wide_web <domain> <subdomain>
 # Configure domain zone so the subdomain www points to load-balancer IP (lb-01)
 
 display_info () {
