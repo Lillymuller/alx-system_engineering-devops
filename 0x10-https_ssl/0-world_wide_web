@@ -5,23 +5,36 @@
 #Add the subdomain web-01 to your domain, point it to your web-01 IP
 #Add the subdomain web-02 to your domain, point it to your web-02 IP
 
-subdomains_all=( "www" "lb-01" "web-01" "web-02" )
-
-runDig () {
-    subdomain=$1
-    domain=$2
-
-    dig "$subdomain.$domain" | grep -A1 'ANSWER SECTION:' | tail -1 | awk -v s="$subdomain" 'BEGIN { FS = " " } ; { print "The subdomain " s " is a " $4 " record and points to " $5 }'
+display_record() {
+  record_type=$(dig +short -t A "$1.$2" | head -n 1)
+  if [[ -n "$record_type" ]]; then
+    destination=$(dig +short -t A "$1.$2" | head -n 1)
+    echo "The subdomain $1 is an A record and points to $destination"
+  else
+    echo "No A record found for subdomain $1"
+  fi
 }
 
-if [ $# -eq 1 ]; then
-    domain="$1"
-    for i in "${subdomains_all[@]}"
-    do
-	runDig "$i" "$domain"
-    done
-elif [ $# -eq 2 ]; then
-    domain="$1"
-    subdomain="$2"
-    runDig "$subdomain" "$domain"
+# Validate domain argument
+if [[ $# -lt 1 ]]; then
+  echo "Error: Please provide a domain name"
+  exit 1
 fi
+
+domain="$1"
+subdomain="$2"
+
+# Check if only domain argument is provided
+if [[ -z "$subdomain" ]]; then
+  # Display information for specific subdomains
+  display_record www "$domain"
+  display_record lb-01 "$domain"
+  display_record web-01 "$domain"
+  display_record web-02 "$domain"
+else
+  # Display information for the provided subdomain
+  display_record "$subdomain" "$domain"
+fi
+
+# Ignore shellcheck SC2086 warning
+# shellcheck disable=SC2086
