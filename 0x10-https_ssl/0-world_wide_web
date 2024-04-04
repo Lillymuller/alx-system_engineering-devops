@@ -6,19 +6,18 @@
 #Add the subdomain web-02 to your domain, point it to your web-02 IP
 
 display_record() {
-  record_type=$(dig +short -t A "$1.$2" | head -n 1)
-  if [[ -n "$record_type" ]]; then
-    destination=$(dig +short -t A "$1.$2" | head -n 1)
-    echo "The subdomain $1 is an A record and points to $destination"
-  else
-    echo "No A record found for subdomain $1"
-  fi
+record_type=$(dig +short -t A "$1.$2" | head -n 1)
+if [[ -n "$record_type" ]]; then
+destination=$(dig +short -t A "$1.$2" | head -n 1)
+echo "The subdomain $1 is an A record and points to $destination"
+else
+echo "No A record found for subdomain $1"
+fi
 }
-
-# Validate domain argument
+# Validate domain argumenent
 if [[ $# -lt 1 ]]; then
-  echo "Error: Please provide a domain name"
-  exit 1
+echo "Error: Please provide a domain name"
+exit 1
 fi
 
 domain="$1"
@@ -26,14 +25,14 @@ subdomain="$2"
 
 # Check if only domain argument is provided
 if [[ -z "$subdomain" ]]; then
-  # Display information for specific subdomains
-  display_record www "$domain"
-  display_record lb-01 "$domain"
-  display_record web-01 "$domain"
-  display_record web-02 "$domain"
+# Display information for specific subdomains
+display_record www "$domain"
+display_record lb-01 "$domain"
+display_record web-01 "$domain"
+display_record web-02 "$domain"
 else
-  # Display information for the provided subdomain
-  display_record "$subdomain" "$domain"
+# Display information for the provided subdomain
+display_record "$subdomain" "$domain"
 fi
 
 # Ignore shellcheck SC2086 warning
