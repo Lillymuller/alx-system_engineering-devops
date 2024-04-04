@@ -1,5 +1,6 @@
+#!/usr/bin/env bash
 age: ./1-world_wide_web <domain> <subdomain>
-# Display information about subdomains.
+# Configure domain zone so the subdomain www points to load-balancer IP (lb-01)
 
 display_info () {
     line=$(dig "$2"."$1" | grep -A1 'ANSWER SECTION:' | tr '\t' '\n' | tail -2 | tr '\n' ' ')
