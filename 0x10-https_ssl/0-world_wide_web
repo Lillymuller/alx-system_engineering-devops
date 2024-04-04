@@ -1,39 +1,18 @@
-#!/usr/bin/env bash
-#Configure domain so subdomain www points to load-balancer IP (lb-01)
-#Add the subdomain www to your domain, point it to your lb-01 IP
-#Add the subdomain lb-01 to your domain, point it to your lb-01 IP
-#Add the subdomain web-01 to your domain, point it to your web-01 IP
-#Add the subdomain web-02 to your domain, point it to your web-02 IP
+age: ./1-world_wide_web <domain> <subdomain>
+# Display information about subdomains.
 
-display_record() {
-record_type=$(dig +short -t A "$1.$2" | head -n 1)
-if [[ -n "$record_type" ]]; then
-destination=$(dig +short -t A "$1.$2" | head -n 1)
-echo "The subdomain $1 is an A record and points to $destination"
-else
-echo "No A record found for subdomain $1"
-fi
+display_info () {
+    line=$(dig "$2"."$1" | grep -A1 'ANSWER SECTION:' | tr '\t' '\n' | tail -2 | tr '\n' ' ')
+    echo "$2 $line" | awk '{print "The subdomain " $1 " is a " $2 " record and points to " $3}'
 }
-# Validate domain argumenent
-if [[ $# -lt 1 ]]; then
-echo "Error: Please provide a domain name"
-exit 1
+
+if [ "$#" == 1 ]
+then
+  display_info "$1" "www"
+  display_info "$1" "lb-01"
+  display_info "$1" "web-01"
+  display_info "$1" "web-02"
+elif [ "$#" == 2 ]
+then
+  display_info "$1" "$2"
 fi
-
-domain="$1"
-subdomain="$2"
-
-# Check if only domain argument is provided
-if [[ -z "$subdomain" ]]; then
-# Display information for specific subdomains
-display_record www "$domain"
-display_record lb-01 "$domain"
-display_record web-01 "$domain"
-display_record web-02 "$domain"
-else
-# Display information for the provided subdomain
-display_record "$subdomain" "$domain"
-fi
-
-# Ignore shellcheck SC2086 warning
-# shellcheck disable=SC2086
