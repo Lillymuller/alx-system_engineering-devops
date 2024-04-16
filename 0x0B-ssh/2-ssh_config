@@ -5,3 +5,16 @@ Host web-01
 	User ubuntu
 	PasswordAuthentication no
 	IdentityFile ~/.ssh/school
+
+Host web-02
+        Hostname 100.26.212.112
+        User ubuntu
+        PasswordAuthentication no
+        IdentityFile ~/.ssh/school
+
+
+Host lb-01
+        Hostname 35.153.193.155
+        User ubuntu
+        PasswordAuthentication no
+        IdentityFile ~/.ssh/school
