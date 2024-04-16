@@ -42,10 +42,10 @@ frontend http
 	default_backend web-backend
 
 frontend www-https
-	bind *:443 ssl crt /etc/haproxy/certs/lillymullerx.tech.pem
+	bind *:443 ssl crt /etc/haproxy/certs/www.lillymullerx.tech.pem
 	default_backend web-backend
 
 backend web-backend
 	balance roundrobin
-	server 528720-web-01 3.86.7.100:80 check
-	server 528720-web-02 100.26.212.112:80 check
+	server 528720-web-01 52.204.102.65:80 check
+	server 528720-web-02 107.23.39.87:80 check
