@@ -1,4 +1,4 @@
-global
+glol
         log /dev/log    local0
         log /dev/log    local1 notice
         chroot /var/lib/haproxy
@@ -43,23 +43,20 @@ defaults
 
 # Setting up SSL
 
-frontend www-http
+frontend lillymullerx-http
         bind 0.0.0.0:80
         reqadd X-Forwarded-Proto:\ http
-        default_backend www-backend
+        default_backend lillymullerx-backend
 
-frontend www-https
+frontend lillymullerx-https
         bind 0.0.0.0:443 ssl crt /etc/haproxy/certs/www.lillymullerx.tech.pem
         reqadd X-Forwarded-Proto:\ https
         acl letsencrypt-acl path_beg /.well-known/acme-challenge/
         use_backend letsencrypt-backend if letsencrypt-acl
-        default_backend www-backend
+        default_backend lillymullerx-backend
 
-backend www-backend
+backend lillymullerx-backend
         balance roundrobin
         redirect scheme https code 301 if !{ ssl_fc }
         server 528720-web-01 52.204.102.65:80 check
         server 528720-web-02 107.23.39.87:80 check
-
-backend letsencrypt-backend
-        server letsencrypt 127.0.0.1:54321
