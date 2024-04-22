@@ -9,9 +9,7 @@ if __name__ == "__main__":
     url = "https://jsonplaceholder.typicode.com/"
     user = requests.get(url + "users/{}".format(user_id)).json()
     username = user.get("username")
-    todos_url = url + "todos"
-    params = {"userId": user_id}
-    todos = requests.get(todos_url, params=params).json()
+    todos = requests.get(url + "todos" , params={"userID": user_id}).json()
 
     with open("{}.json".format(user_id), "w") as jsonfile:
         json.dump({user_id: [{
