@@ -30,7 +30,8 @@ if __name__ == "__main__":
         todos_data = json.loads(response.read().decode())
 
     """Filter completed tasks"""
-    seted = [todo.get("title") for todo in todos_data if todo.get("completed") is True]
+    seted = [todo.get("title") for todo in todos_data
+            if todo.get("completed") is True]
 
     """Print summary"""
     print("Employee {} is done with tasks({}/{}):".format(
