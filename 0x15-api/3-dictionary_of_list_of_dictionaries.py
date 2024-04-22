@@ -1,11 +1,12 @@
 #!/usr/bin/python3
-"""Exports todo list off all employees to JSON format."""
+"""Exports todo list of all employees to JSON format"""
 import json
 import requests
 
 if __name__ == "__main__":
     url = "https://jsonplaceholder.typicode.com/"
-    users = requests.get(url + "users").json()
+    todos_url = url + "users"
+    users = requests.get(todos_url).json()
 
     with open("todo_all_employees.json", "w") as jsonfile:
         json.dump({
