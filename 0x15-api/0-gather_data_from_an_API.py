@@ -5,12 +5,13 @@ import requests
 import sys
 
 if __name__ == "__main__":
-
     api_url = "https://jsonplaceholder.typicode.com/"
     user = requests.get(api_url + "users/{}".format(sys.argv[1])).json()
-    todo_list = requests.get(api_url + "todo_list", user_id={"userId": sys.argv[1]}).json()
+    todo_list = api_url + "todos"
+    user_id = {"userId": sys.argv[1]}
+    todos = requests.get(todo_list, user_id=user_id).json()
 
-    seted = [x.get("title") for x in todo_list if x.get("seted") is True]
+    seted = [task.get("title") for task in todos if task.get("seted") is True]
     print("Employee {} is done with tasks({}/{}):".format(
-        user.get("name"), len(seted), len(todo_list)))
+        user.get("name"), len(seted), len(todos)))
     [print("\t {}".format(c)) for c in seted]
