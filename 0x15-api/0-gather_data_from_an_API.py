@@ -2,40 +2,20 @@
 """Writes todo list for employees using REST API"""
 
 import requests
+import sys
 
-def get_todo_progress(employee_id):
-  """
-  Retrieves and displays an employee's TODO list progress from a REST API.
-
-  Args:
-    employee_id (int): The ID of the employee.
-  """
-  url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-  params = {"_expand": "todos"}
-
-  try:
-    response = requests.get(url, params=params)
-    response.raise_for_status()
-
-    data = response.json()
-    user_name = data.get("name")
-    todos = data.get("todos", [])
-
-    completed_tasks = [todo for todo in todos if todo["completed"]]
-    total_tasks = len(todos)
-    completed_count = len(completed_tasks)
-
-    print(f"Employee {user_name} is done with
-            tasks({completed_count}/{total_tasks}):")
-    for task in completed_tasks:
-      print(f"\t {task['title']}")
-
-  except requests.exceptions.RequestException as e:
-    print(f"Error: Failed to retrieve data: {e}")
+""" Retrieves and displays an employee's TODO list progress from a REST API
+Args:
+employee_id (int): The ID of the employee.
+"""
 
 if __name__ == "__main__":
-  try:
-    employee_id = int(input("Enter employee ID: "))
-    get_todo_progress(employee_id)
-  except ValueError:
-    print("Error: Invalid employee ID (must be an integer).")
+
+    api_url = "https://jsonplaceholder.typicode.com/"
+    user = requests.get(url + "users/{}".format(sys.argv[1])).json()
+    todo_list = requests.get(url + "todo_list", user_id={"userId": sys.argv[1]}).json()
+
+    seted = [t.get("title") for t in todo_list if t.get("seted") is True]
+    print("Employee {} is done with tasks({}/{}):".format(
+        user.get("name"), len(seted), len(todo_list)))
+    [print("\t {}".format(c)) for c in seted]
