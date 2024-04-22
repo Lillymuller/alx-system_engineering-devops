@@ -11,11 +11,11 @@ def get_todo_progress(employee_id):
     employee_id (int): The ID of the employee.
   """
   url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-  params = {"_expand": "todos"}  # Include related todos
+  params = {"_expand": "todos"}
 
   try:
     response = requests.get(url, params=params)
-    response.raise_for_status()  # Raise exception for non-200 status codes
+    response.raise_for_status()
 
     data = response.json()
     user_name = data.get("name")
@@ -25,7 +25,8 @@ def get_todo_progress(employee_id):
     total_tasks = len(todos)
     completed_count = len(completed_tasks)
 
-    print(f"Employee {user_name} is done with tasks({completed_count}/{total_tasks}):")
+    print(f"Employee {user_name} is done with
+            tasks({completed_count}/{total_tasks}):")
     for task in completed_tasks:
       print(f"\t {task['title']}")
 
