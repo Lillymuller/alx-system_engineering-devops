@@ -1,41 +1,40 @@
 #!/usr/bin/python3
-"""
-Write a sript using REST API that returns employees todo list
-Requirements:
-    You must use urllib or requests module
-    EMPLOYEE_NAME: name of the employee
-    NUMBER_OF_DONE_TASKS: number of completed tasks
-    TOTAL_NUMBER_OF_TASKS: total number of tasks
-Second and N next lines display the title of completed tasks
-"""
+"""Writes todo list for employees using REST API"""
 
-import urllib.request
 import requests
-import sys
 
+def get_todo_progress(employee_id):
+  """
+  Retrieves and displays an employee's TODO list progress from a REST API.
+
+  Args:
+    employee_id (int): The ID of the employee.
+  """
+  url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
+  params = {"_expand": "todos"}  # Include related todos
+
+  try:
+    response = requests.get(url, params=params)
+    response.raise_for_status()  # Raise exception for non-200 status codes
+
+    data = response.json()
+    user_name = data.get("name")
+    todos = data.get("todos", [])
+
+    completed_tasks = [todo for todo in todos if todo["completed"]]
+    total_tasks = len(todos)
+    completed_count = len(completed_tasks)
+
+    print(f"Employee {user_name} is done with tasks({completed_count}/{total_tasks}):")
+    for task in completed_tasks:
+      print(f"\t {task['title']}")
+
+  except requests.exceptions.RequestException as e:
+    print(f"Error: Failed to retrieve data: {e}")
 
 if __name__ == "__main__":
-    api_ url = "https://jsonplaceholder.typicode.com/"
-    
-    """Fetch user data"""
-    user_url = url + "users/{}".format(sys.argv[1])
-    with urllib.request.urlopen(user_url) as response:
-        user_data = json.loads(response.read().decode())
-
-    """Fetch todos data with parameters"""
-    todo_list = url + "todos"
-    user_id = {"userId": sys.argv[1]}
-    encoded_params = urllib.parse.urlencode(user_id).encode()
-    with urllib.request.urlopen(todo_list, encoded_params) as response:
-        todos_data = json.loads(response.read().decode())
-
-    """Filter completed tasks"""
-    seted = [todo.get("title") for todo in todos_data
-            if todo.get("completed") is True]
-
-    """Print summary"""
-    print("Employee {} is done with tasks({}/{}):".format(
-        user_data.get("name"), len(seted), len(todos_data)))
-
-    """Print individual completed tasks"""
-    [print("\t {}".format(c)) for c in seted]
+  try:
+    employee_id = int(input("Enter employee ID: "))
+    get_todo_progress(employee_id)
+  except ValueError:
+    print("Error: Invalid employee ID (must be an integer).")
