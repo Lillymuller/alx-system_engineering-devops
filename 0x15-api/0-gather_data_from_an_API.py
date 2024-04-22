@@ -6,11 +6,11 @@ import sys
 if __name__ == "__main__":
     url = "https://jsonplaceholder.typicode.com/"
     user = requests.get(url + "users/{}".format(sys.argv[1])).json()
-    todo_url = url + "todos"
+    todos_url = url + "todos"
     params = {"userId": sys.argv[1]}
-    todos = requests.get(todo_url, params=params).json()
+    todos = requests.get(todos_url, params=params).json()
 
-    comp = [task.get("title") for task in todos if task.get("comp") is True]
+    completed = [task.get("title") for task in todos if task.get("comp") is True]
     print("Employee {} is done with tasks({}/{}):".format(
-        user.get("name"), len(comp), len(todos)))
-    [print("\t {}".format(c)) for c in comp]
+        user.get("name"), len(completed), len(todos)))
+    [print("\t {}".format(c)) for c in completed]
