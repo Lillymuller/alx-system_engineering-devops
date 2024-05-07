@@ -20,7 +20,7 @@ def top_ten(subreddit):
 
     if r.status_code == 200:
         for get_data in r.json().get("data").get("children"):
-            data= get_data.get("data")
+            data = get_data.get("data")
             title = data.get("title")
             print(title)
     else:
