@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-"""
-function that queries the Reddit API and returns the number of subscribers
-"""
+"""Function to query subscribers on a given Reddit subreddit"""
 
 import requests
 
@@ -17,6 +15,6 @@ def number_of_subscribers(subreddit):
     }
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
-        return response.json().get("data", {}).get("subscribers")
+        return response.json().get("data").get("subscribers")
     else:
         return 0
