@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""recursive function that queries Reddit API parses title of all hot articles"""
+""" Module for a function that queries the Reddit API recursively."""
 
 
 import requests
